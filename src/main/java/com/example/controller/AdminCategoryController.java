@@ -20,7 +20,7 @@ import java.util.List;
  * Servlet acting as the Controller for Category operations.
  * Handles HTTP requests, invokes the Service layer, and forwards to JSP view.
  */
-@WebServlet(name = "AdminCategoryController", urlPatterns = { "/categories", "/admin/categories" })
+@WebServlet(name = "AdminCategoryController", urlPatterns = { "/admin/categories" })
 public class AdminCategoryController extends HttpServlet {
 
     private CategoryService categoryService;

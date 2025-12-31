@@ -17,9 +17,9 @@ public class PanierController extends HttpServlet {
 
     HttpSession session = request.getSession();
 
-    // Sécurité : uniquement CLIENT
+    // Sécurité : uniquement CLIENT ou ADMIN
     String role = (String) session.getAttribute("role");
-    if (!"CLIENT".equals(role) || !"ADMIN".equals((role))) {
+    if (role == null || (!"CLIENT".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role))) {
       response.sendRedirect("login.jsp");
       return;
     }
