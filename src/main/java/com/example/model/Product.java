@@ -16,6 +16,10 @@ public class Product implements Serializable {
   private String categoryName;
   private Timestamp createdAt;
 
+  // Transient fields for promotion display
+  private Double discountedPrice;
+  private boolean isOnPromotion = false;
+
   public Product() {
   }
 
@@ -111,5 +115,21 @@ public class Product implements Serializable {
 
   public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public Double getDiscountedPrice() {
+    return discountedPrice;
+  }
+
+  public void setDiscountedPrice(Double discountedPrice) {
+    this.discountedPrice = discountedPrice;
+  }
+
+  public boolean isOnPromotion() {
+    return isOnPromotion;
+  }
+
+  public void setOnPromotion(boolean onPromotion) {
+    isOnPromotion = onPromotion;
   }
 }

@@ -182,6 +182,34 @@
                             background: #f8fafc;
                             border-radius: 1rem;
                           }
+
+                          /* Promotion Styles */
+                          .price-badge.bg-danger {
+                            background: #dc3545 !important;
+                            animation: pulse-red 2s infinite;
+                          }
+
+                          @keyframes pulse-red {
+
+                            0%,
+                            100% {
+                              box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+                            }
+
+                            50% {
+                              box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+                            }
+                          }
+
+                          #modalOriginalPrice {
+                            font-size: 1.1rem;
+                            display: block;
+                            margin-bottom: 0.5rem;
+                          }
+
+                          .text-danger {
+                            color: #dc3545 !important;
+                          }
                         </style>
                       </head>
 
@@ -260,12 +288,14 @@
                                       prod.getDescription().replace("\"", "&quot;" ) : "" ; %>
 
                                       <div class="product-item" data-name="<%= safeName.toLowerCase() %>"
-                                        data-price="<%= prod.getPrice() %>" data-category-id="<%= cat.getId() %>">
+                                        data-price="<%= prod.isOnPromotion() ? prod.getDiscountedPrice() : prod.getPrice() %>"
+                                        data-category-id="<%= cat.getId() %>">
                                         <div class="product-card h-100">
                                           <div class="product-image-container">
                                             <img
-                                              src="<%= (prod.getImagePath() != null && !prod.getImagePath().isEmpty()) ? prod.getImagePath() : "https://via.placeholder.com/300x200?text=No+Image" %>"
+                                              src="<%= (prod.getImagePath() != null && !prod.getImagePath().trim().isEmpty()) ? prod.getImagePath() : "https://via.placeholder.com/300x200?text=No+Image" %>"
                                             alt="<%= safeName %>" class="product-image">
+
                                           </div>
                                           <div class="card-body d-flex flex-column">
                                             <div class="d-flex justify-content-between align-items-start mb-2">
@@ -278,13 +308,28 @@
                                             </p>
 
                                             <div class="mt-auto d-flex justify-content-between align-items-center">
-                                              <span class="price-badge">
-                                                <%= String.format("%.2f", prod.getPrice()) %> €
-                                              </span>
+                                              <div class="d-flex flex-column">
+                                                <% if (prod.isOnPromotion()) { %>
+                                                  <small class="text-muted text-decoration-line-through mb-1"
+                                                    style="font-size: 0.75rem;">
+                                                    <%= String.format("%.2f", prod.getPrice()) %>€
+                                                  </small>
+                                                  <span class="price-badge bg-danger text-white">
+                                                    <%= String.format("%.2f", prod.getDiscountedPrice()) %> €
+                                                  </span>
+                                                  <% } else { %>
+                                                    <span class="price-badge">
+                                                      <%= String.format("%.2f", prod.getPrice()) %> €
+                                                    </span>
+                                                    <% } %>
+                                              </div>
+
                                               <button class="btn btn-details btn-sm shadow-sm"
                                                 data-id="<%= prod.getId() %>" data-name="<%= safeName %>"
-                                                data-price="<%= prod.getPrice() %>" data-desc="<%= safeDesc %>"
-                                                data-image="<%= prod.getImagePath() %>"
+                                                data-price="<%= prod.isOnPromotion() ? prod.getDiscountedPrice() : prod.getPrice() %>"
+                                                data-original-price="<%= prod.getPrice() %>"
+                                                data-on-promotion="<%= prod.isOnPromotion() %>"
+                                                data-desc="<%= safeDesc %>" data-image="<%= prod.getImagePath() %>"
                                                 data-category="<%= cat.getName() %>" onclick="showDetails(this)">
                                                 Voir détails
                                               </button>
@@ -323,7 +368,11 @@
                                   </div>
                                   <div class="col-md-6 d-flex flex-column justify-content-center">
                                     <h2 class="fw-bold mb-3" id="modalName"></h2>
-                                    <h3 class="text-primary fw-bold mb-4" id="modalPrice"></h3>
+                                    <div class="mb-4" id="modalPriceContainer">
+                                      <small class="text-muted text-decoration-line-through d-none"
+                                        id="modalOriginalPrice"></small>
+                                      <h3 class="text-primary fw-bold mb-0" id="modalPrice"></h3>
+                                    </div>
                                     <p class="text-muted lead mb-4" id="modalDesc"></p>
 
                                     <form action="panier" method="post" class="mt-auto">
@@ -411,7 +460,25 @@
                           function showDetails(btn) {
                             const data = btn.dataset;
                             document.getElementById('modalName').textContent = data.name;
-                            document.getElementById('modalPrice').textContent = parseFloat(data.price).toFixed(2) + ' €';
+
+                            // Handle promotion pricing
+                            const isOnPromotion = data.onPromotion === 'true';
+                            const modalOriginalPrice = document.getElementById('modalOriginalPrice');
+                            const modalPrice = document.getElementById('modalPrice');
+
+                            if (isOnPromotion) {
+                              modalOriginalPrice.textContent = parseFloat(data.originalPrice).toFixed(2) + ' €';
+                              modalOriginalPrice.classList.remove('d-none');
+                              modalPrice.textContent = parseFloat(data.price).toFixed(2) + ' €';
+                              modalPrice.classList.add('text-danger');
+                              modalPrice.classList.remove('text-primary');
+                            } else {
+                              modalOriginalPrice.classList.add('d-none');
+                              modalPrice.textContent = parseFloat(data.price).toFixed(2) + ' €';
+                              modalPrice.classList.add('text-primary');
+                              modalPrice.classList.remove('text-danger');
+                            }
+
                             document.getElementById('modalDesc').textContent = data.desc;
 
                             // Populate form inputs
