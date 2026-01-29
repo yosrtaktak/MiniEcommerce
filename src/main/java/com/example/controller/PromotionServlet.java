@@ -75,8 +75,26 @@ public class PromotionServlet extends HttpServlet {
         String idStr = request.getParameter("id");
         String title = request.getParameter("title");
         String type = request.getParameter("type");
-        double value = Double.parseDouble(request.getParameter("value"));
+        String valueStr = request.getParameter("value");
         String desc = request.getParameter("description");
+
+        // Validate required fields
+        if (title == null || title.trim().isEmpty() ||
+                type == null || type.trim().isEmpty() ||
+                valueStr == null || valueStr.trim().isEmpty()) {
+            request.setAttribute("error", "Tous les champs obligatoires doivent être remplis.");
+            listPromotions(request, response);
+            return;
+        }
+
+        double value;
+        try {
+            value = Double.parseDouble(valueStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "La valeur doit être un nombre valide.");
+            listPromotions(request, response);
+            return;
+        }
 
         // Dates (Simplification: using string fallback or java.sql.Timestamp.valueOf)
         // Format from HTML 'datetime-local' is 'yyyy-MM-ddTHH:mm', need to append ':00'

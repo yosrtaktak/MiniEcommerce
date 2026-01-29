@@ -19,7 +19,8 @@
                         <title>Nos Catégories - Boutique</title>
 
                         <!-- Fonts & Icons -->
-                        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"
+                        <link
+                          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
                           rel="stylesheet">
                         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
                           rel="stylesheet">
@@ -27,75 +28,73 @@
                         <!-- Bootstrap 5 -->
                         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
                           rel="stylesheet">
+                        <link rel="stylesheet" href="css/style.css">
 
                         <style>
-                          :root {
-                            --primary-color: #2563eb;
-                            --secondary-color: #1e293b;
-                            --accent-color: #3b82f6;
-                            --bg-light: #f8fafc;
-                          }
-
                           body {
-                            font-family: 'Outfit', sans-serif;
-                            background-color: var(--bg-light);
-                            color: var(--secondary-color);
+                            font-family: 'Inter', sans-serif;
+                            background-color: #f8fafc;
+                            color: #1e293b;
                           }
 
                           .hero-section {
-                            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                            color: white;
+                            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
                             padding: 4rem 0;
+                            border-radius: 0 0 40px 40px;
                             margin-bottom: 3rem;
-                            border-radius: 0 0 2rem 2rem;
-                            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+                          }
+
+                          .hero-section h1 {
+                            font-weight: 800;
+                            letter-spacing: -0.025em;
                           }
 
                           .category-title {
+                            font-weight: 800;
+                            font-size: 1.75rem;
+                            color: #1e293b;
+                            margin-bottom: 1.5rem;
                             position: relative;
-                            display: inline-block;
-                            margin-bottom: 2rem;
-                            color: var(--secondary-color);
-                            font-weight: 700;
+                            padding-left: 1rem;
+                            border-left: 5px solid #4f46e5;
                           }
 
-                          .category-title::after {
-                            content: '';
-                            position: absolute;
-                            bottom: -10px;
-                            left: 0;
-                            width: 50px;
-                            height: 4px;
-                            background: var(--primary-color);
-                            border-radius: 2px;
+                          /* Filters */
+                          .filter-card {
+                            border: none;
+                            border-radius: 1.5rem;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
                           }
 
-                          /* Horizontal Scrolling Wrapper */
+                          /* Scrolling Wrapper */
                           .scrolling-wrapper {
                             overflow-x: auto;
-                            overflow-y: hidden;
-                            -webkit-overflow-scrolling: touch;
-                            scroll-behavior: smooth;
+                            display: flex;
+                            gap: 1.5rem;
+                            padding: 0.5rem 0.5rem 1.5rem;
+                            scrollbar-width: thin;
+                            scrollbar-color: #4f46e5 #f1f5f9;
                           }
 
                           .scrolling-wrapper::-webkit-scrollbar {
-                            height: 8px;
+                            height: 6px;
                           }
 
                           .scrolling-wrapper::-webkit-scrollbar-track {
                             background: #f1f5f9;
-                            border-radius: 4px;
+                            border-radius: 10px;
                           }
 
                           .scrolling-wrapper::-webkit-scrollbar-thumb {
                             background: #cbd5e1;
-                            border-radius: 4px;
+                            border-radius: 10px;
                           }
 
                           .scrolling-wrapper::-webkit-scrollbar-thumb:hover {
-                            background: #94a3b8;
+                            background: #4f46e5;
                           }
 
+                          /* Product Cards */
                           .product-item {
                             width: 280px;
                             flex-shrink: 0;
@@ -103,112 +102,153 @@
 
                           .product-card {
                             border: none;
-                            border-radius: 1rem;
-                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            border-radius: 1.25rem;
                             background: white;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
                             height: 100%;
+                            display: flex;
+                            flex-direction: column;
                             overflow: hidden;
-                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
                           }
 
                           .product-card:hover {
-                            transform: translateY(-8px);
-                            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                            transform: translateY(-5px);
+                            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
                           }
 
                           .product-image-container {
                             height: 200px;
-                            overflow: hidden;
-                            position: relative;
                             background: #f1f5f9;
+                            position: relative;
+                            overflow: hidden;
                           }
 
                           .product-image {
                             width: 100%;
                             height: 100%;
-                            object-fit: cover;
-                            transition: transform 0.5s ease;
+                            object-fit: contain;
+                            padding: 1rem;
+                            mix-blend-mode: multiply;
                           }
 
-                          .product-card:hover .product-image {
-                            transform: scale(1.05);
+                          .promo-badge {
+                            position: absolute;
+                            top: 0.75rem;
+                            right: 0.75rem;
+                            background: #ef4444;
+                            color: white;
+                            padding: 0.25rem 0.75rem;
+                            border-radius: 9999px;
+                            font-weight: 700;
+                            font-size: 0.75rem;
+                            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+                            z-index: 2;
                           }
 
                           .card-body {
                             padding: 1.25rem;
+                            flex-grow: 1;
+                            display: flex;
+                            flex-direction: column;
                           }
 
-                          .price-badge {
-                            background: var(--bg-light);
-                            color: var(--primary-color);
+                          .card-title {
+                            font-size: 1.125rem;
                             font-weight: 700;
-                            padding: 0.5rem 0.8rem;
-                            border-radius: 0.5rem;
-                            font-size: 0.9rem;
+                            color: #1e293b;
+                            margin-bottom: 0.5rem;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                          }
+
+                          .card-text {
+                            font-size: 0.875rem;
+                            color: #64748b;
+                            margin-bottom: 1.25rem;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            overflow: hidden;
+                          }
+
+                          /* Price Styling */
+                          .price-container {
+                            margin-top: auto;
+                          }
+
+                          .original-price {
+                            display: block;
+                            font-size: 0.875rem;
+                            color: #94a3b8;
+                            text-decoration: line-through;
+                            margin-bottom: -0.25rem;
+                          }
+
+                          .current-price {
+                            font-size: 1.25rem;
+                            font-weight: 800;
+                            color: #4f46e5;
+                          }
+
+                          .current-price.promo {
+                            color: #ef4444;
                           }
 
                           .btn-details {
-                            background: var(--primary-color);
-                            color: white;
+                            background: #f1f5f9;
+                            color: #475569;
+                            border: none;
                             border-radius: 0.75rem;
                             padding: 0.5rem 1rem;
                             font-weight: 600;
+                            font-size: 0.875rem;
                             transition: all 0.2s;
-                            border: none;
-                            font-size: 0.9rem;
                           }
 
                           .btn-details:hover {
-                            background: #1d4ed8;
-                            transform: translateY(-1px);
+                            background: #e2e8f0;
+                            color: #1e293b;
                           }
 
-                          /* Modal Customization */
+                          /* Modal */
                           .modal-content {
                             border-radius: 1.5rem;
                             border: none;
-                            overflow: hidden;
                           }
 
                           .modal-header {
                             background: #f8fafc;
-                            border-bottom: 1px solid #e2e8f0;
+                            border-bottom: 1px solid #f1f5f9;
+                            padding: 1.5rem;
                           }
 
                           .modal-image {
-                            width: 100%;
-                            height: 300px;
-                            object-fit: contain;
-                            background: #f8fafc;
                             border-radius: 1rem;
+                            background: #f1f5f9;
+                            padding: 1rem;
+                            max-height: 400px;
+                            width: 100%;
+                            object-fit: contain;
                           }
 
-                          /* Promotion Styles */
-                          .price-badge.bg-danger {
-                            background: #dc3545 !important;
-                            animation: pulse-red 2s infinite;
-                          }
-
-                          @keyframes pulse-red {
-
-                            0%,
-                            100% {
-                              box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+                          /* Custom Animations */
+                          @keyframes fadeIn {
+                            from {
+                              opacity: 0;
+                              transform: translateY(10px);
                             }
 
-                            50% {
-                              box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+                            to {
+                              opacity: 1;
+                              transform: translateY(0);
                             }
                           }
 
-                          #modalOriginalPrice {
-                            font-size: 1.1rem;
-                            display: block;
-                            margin-bottom: 0.5rem;
-                          }
-
-                          .text-danger {
-                            color: #dc3545 !important;
+                          .animate-fade-in {
+                            animation: fadeIn 0.4s ease-out forwards;
                           }
                         </style>
                       </head>
@@ -230,7 +270,7 @@
 
                         <!-- Filters Section -->
                         <div class="container mb-5">
-                          <div class="card shadow-sm border-0 rounded-4">
+                          <div class="card filter-card">
                             <div class="card-body p-4">
                               <div class="row g-3 items-center">
                                 <div class="col-md-4">
@@ -242,7 +282,7 @@
                                   </div>
                                 </div>
                                 <div class="col-md-4">
-                                  <select id="categoryFilter" class="form-select">
+                                  <select id="categoryFilter" class="form-select border-0 bg-light">
                                     <option value="">Toutes les catégories</option>
                                     <% for (Category cat : categories) { %>
                                       <option value="<%= cat.getId() %>">
@@ -290,48 +330,50 @@
                                       <div class="product-item" data-name="<%= safeName.toLowerCase() %>"
                                         data-price="<%= prod.isOnPromotion() ? prod.getDiscountedPrice() : prod.getPrice() %>"
                                         data-category-id="<%= cat.getId() %>">
-                                        <div class="product-card h-100">
+                                        <div class="product-card">
                                           <div class="product-image-container">
-                                            <img
-                                              src="<%= (prod.getImagePath() != null && !prod.getImagePath().trim().isEmpty()) ? prod.getImagePath() : "https://via.placeholder.com/300x200?text=No+Image" %>"
-                                            alt="<%= safeName %>" class="product-image">
-
+                                            <% if (prod.isOnPromotion()) { double discount=((prod.getPrice() -
+                                              prod.getDiscountedPrice()) / prod.getPrice()) * 100; %>
+                                              <div class="promo-badge">
+                                                -<%= String.format("%.0f", discount) %>%
+                                              </div>
+                                              <% } %>
+                                                <img
+                                                  src="<%= (prod.getImagePath() != null && !prod.getImagePath().trim().isEmpty()) ? prod.getImagePath() : "https://via.placeholder.com/300x200?text=No+Image" %>"
+                                                alt="<%= safeName %>" class="product-image">
                                           </div>
-                                          <div class="card-body d-flex flex-column">
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                              <h5 class="card-title fw-bold mb-0 text-truncate" title="<%= safeName %>">
-                                                <%= prod.getName() %>
-                                              </h5>
-                                            </div>
-                                            <p class="card-text text-muted small text-truncate mb-3">
+                                          <div class="card-body">
+                                            <h5 class="card-title" title="<%= safeName %>">
+                                              <%= prod.getName() %>
+                                            </h5>
+                                            <p class="card-text">
                                               <%= prod.getDescription() %>
                                             </p>
 
-                                            <div class="mt-auto d-flex justify-content-between align-items-center">
-                                              <div class="d-flex flex-column">
+                                            <div class="mt-auto d-flex justify-content-between align-items-end">
+                                              <div class="price-container">
                                                 <% if (prod.isOnPromotion()) { %>
-                                                  <small class="text-muted text-decoration-line-through mb-1"
-                                                    style="font-size: 0.75rem;">
+                                                  <span class="original-price">
                                                     <%= String.format("%.2f", prod.getPrice()) %>€
-                                                  </small>
-                                                  <span class="price-badge bg-danger text-white">
-                                                    <%= String.format("%.2f", prod.getDiscountedPrice()) %> €
+                                                  </span>
+                                                  <span class="current-price promo">
+                                                    <%= String.format("%.2f", prod.getDiscountedPrice()) %>€
                                                   </span>
                                                   <% } else { %>
-                                                    <span class="price-badge">
-                                                      <%= String.format("%.2f", prod.getPrice()) %> €
+                                                    <span class="current-price">
+                                                      <%= String.format("%.2f", prod.getPrice()) %>€
                                                     </span>
                                                     <% } %>
                                               </div>
 
-                                              <button class="btn btn-details btn-sm shadow-sm"
-                                                data-id="<%= prod.getId() %>" data-name="<%= safeName %>"
+                                              <button class="btn btn-details btn-sm" data-id="<%= prod.getId() %>"
+                                                data-name="<%= safeName %>"
                                                 data-price="<%= prod.isOnPromotion() ? prod.getDiscountedPrice() : prod.getPrice() %>"
                                                 data-original-price="<%= prod.getPrice() %>"
                                                 data-on-promotion="<%= prod.isOnPromotion() %>"
                                                 data-desc="<%= safeDesc %>" data-image="<%= prod.getImagePath() %>"
                                                 data-category="<%= cat.getName() %>" onclick="showDetails(this)">
-                                                Voir détails
+                                                Détails <i class="fas fa-arrow-right ms-1 small"></i>
                                               </button>
                                             </div>
                                           </div>
@@ -352,49 +394,59 @@
                                 <% } %>
                         </div>
 
-                        <!-- Product Details Modal -->
                         <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
                           <div class="modal-dialog modal-lg modal-dialog-centered">
-                            <div class="modal-content shadow-lg">
-                              <div class="modal-header">
-                                <h5 class="modal-title fw-bold" id="modalTitle">Détails du Produit</h5>
+                            <div class="modal-content shadow-lg border-0">
+                              <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold" id="modalTitle">Produit</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                   aria-label="Close"></button>
                               </div>
                               <div class="modal-body p-4">
                                 <div class="row g-4">
                                   <div class="col-md-6">
-                                    <img src="" id="modalImage" class="modal-image shadow-sm" alt="Produit">
-                                  </div>
-                                  <div class="col-md-6 d-flex flex-column justify-content-center">
-                                    <h2 class="fw-bold mb-3" id="modalName"></h2>
-                                    <div class="mb-4" id="modalPriceContainer">
-                                      <small class="text-muted text-decoration-line-through d-none"
-                                        id="modalOriginalPrice"></small>
-                                      <h3 class="text-primary fw-bold mb-0" id="modalPrice"></h3>
+                                    <div class="p-3 bg-light rounded-4">
+                                      <img src="" id="modalImage" class="modal-image" alt="Produit">
                                     </div>
-                                    <p class="text-muted lead mb-4" id="modalDesc"></p>
+                                  </div>
+                                  <div class="col-md-6 d-flex flex-column">
+                                    <h2 class="fw-extrabold mb-1" id="modalName"></h2>
+                                    <div class="mb-4">
+                                      <span id="modalOriginalPrice"
+                                        class="text-muted text-decoration-line-through me-2 d-none"></span>
+                                      <span id="modalPrice" class="fs-2 fw-bold text-primary"></span>
+                                    </div>
 
-                                    <form action="panier" method="post" class="mt-auto">
-                                      <input type="hidden" name="action" value="add">
-                                      <input type="hidden" name="productName" id="inputName">
-                                      <input type="hidden" name="productPrice" id="inputPrice">
-                                      <input type="hidden" name="description" id="inputDesc">
-                                      <input type="hidden" name="category" id="inputCategory">
-                                      <input type="hidden" name="imagePath" id="inputImage">
+                                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Description</h6>
+                                    <p class="text-secondary mb-4" id="modalDesc"></p>
 
-                                      <div class="d-flex align-items-center mb-3">
-                                        <label class="me-3 fw-semibold">Quantité:</label>
-                                        <input type="number" name="quantity" class="form-control w-25 text-center"
-                                          value="1" min="1" max="10">
-                                      </div>
+                                    <div class="mt-auto border-top pt-4">
+                                      <form action="panier" method="post">
+                                        <input type="hidden" name="action" value="add">
+                                        <input type="hidden" name="productName" id="inputName">
+                                        <input type="hidden" name="productPrice" id="inputPrice">
+                                        <input type="hidden" name="description" id="inputDesc">
+                                        <input type="hidden" name="category" id="inputCategory">
+                                        <input type="hidden" name="imagePath" id="inputImage">
 
-                                      <div class="d-grid gap-2">
-                                        <button type="submit" class="btn btn-dark rounded-pill py-2">
+                                        <div class="row g-3 align-items-center mb-4">
+                                          <div class="col-auto">
+                                            <label class="fw-bold small text-muted">QUANTITÉ</label>
+                                          </div>
+                                          <div class="col-4">
+                                            <div class="input-group input-group-sm">
+                                              <input type="number" name="quantity"
+                                                class="form-control text-center rounded-3" value="1" min="1" max="10">
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <button type="submit"
+                                          class="btn btn-primary-custom w-100 text-white rounded-pill py-3">
                                           <i class="fas fa-shopping-cart me-2"></i> Ajouter au panier
                                         </button>
-                                      </div>
-                                    </form>
+                                      </form>
+                                    </div>
                                   </div>
                                 </div>
                               </div>

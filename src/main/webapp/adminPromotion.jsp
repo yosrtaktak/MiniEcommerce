@@ -232,15 +232,11 @@
                                                           <i class="fas fa-edit"></i>
                                                         </button>
 
-                                                        <form action="/admin/promotions" method="post" class="d-inline">
-                                                          <input type="hidden" name="action" value="delete">
-                                                          <input type="hidden" name="id" value="<%= promo.getId() %>">
-                                                          <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger rounded-pill"
-                                                            onclick="return confirm('Supprimer cette promotion ?')">
-                                                            <i class="fas fa-trash"></i>
-                                                          </button>
-                                                        </form>
+                                                        <a href="/admin/promotions?action=delete&id=<%= promo.getId() %>"
+                                                          class="btn btn-sm btn-outline-danger rounded-pill"
+                                                          onclick="return confirm('Supprimer cette promotion ?')">
+                                                          <i class="fas fa-trash"></i>
+                                                        </a>
                                                       </div>
                                                     </div>
                                                   </div>
