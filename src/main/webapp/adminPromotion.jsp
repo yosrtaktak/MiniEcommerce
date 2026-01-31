@@ -220,23 +220,35 @@
                                                       <hr class="my-2">
 
                                                       <div class="d-flex justify-content-end gap-2">
-                                                        <button
-                                                          class="btn btn-sm btn-outline-dark rounded-pill edit-btn"
-                                                          type="button" data-id="<%= promo.getId() %>"
-                                                          data-title="<%= safeTitle %>" data-type="<%= safeType %>"
-                                                          data-value="<%= promo.getValue() %>"
-                                                          data-start-date="<%= safeStartDate %>"
-                                                          data-end-date="<%= safeEndDate %>"
-                                                          data-category="<%= safeCat %>" data-product="<%= safeProd %>"
-                                                          data-description="<%= safeDesc %>">
-                                                          <i class="fas fa-edit"></i>
-                                                        </button>
+                                                        <% String formattedStartDate="" ; String formattedEndDate="" ;
+                                                          java.text.SimpleDateFormat sdf=new
+                                                          java.text.SimpleDateFormat("yyyy-MM-dd"); if
+                                                          (promo.getStartDate() !=null) {
+                                                          formattedStartDate=sdf.format(promo.getStartDate()); } if
+                                                          (promo.getEndDate() !=null) {
+                                                          formattedEndDate=sdf.format(promo.getEndDate()); } String
+                                                          catIdStr=promo.getCategoryId() !=null ?
+                                                          String.valueOf(promo.getCategoryId()) : "" ; String
+                                                          prodIdStr=promo.getProductId() !=null ?
+                                                          String.valueOf(promo.getProductId()) : "" ; %>
+                                                          <button
+                                                            class="btn btn-sm btn-outline-dark rounded-pill edit-btn"
+                                                            type="button" data-id="<%= promo.getId() %>"
+                                                            data-title="<%= safeTitle %>" data-type="<%= safeType %>"
+                                                            data-value="<%= promo.getValue() %>"
+                                                            data-start-date="<%= formattedStartDate %>"
+                                                            data-end-date="<%= formattedEndDate %>"
+                                                            data-category-id="<%= catIdStr %>"
+                                                            data-product-id="<%= prodIdStr %>"
+                                                            data-description="<%= safeDesc %>">
+                                                            <i class="fas fa-edit"></i>
+                                                          </button>
 
-                                                        <a href="/admin/promotions?action=delete&id=<%= promo.getId() %>"
-                                                          class="btn btn-sm btn-outline-danger rounded-pill"
-                                                          onclick="return confirm('Supprimer cette promotion ?')">
-                                                          <i class="fas fa-trash"></i>
-                                                        </a>
+                                                          <a href="/admin/promotions?action=delete&id=<%= promo.getId() %>"
+                                                            class="btn btn-sm btn-outline-danger rounded-pill"
+                                                            onclick="return confirm('Supprimer cette promotion ?')">
+                                                            <i class="fas fa-trash"></i>
+                                                          </a>
                                                       </div>
                                                     </div>
                                                   </div>

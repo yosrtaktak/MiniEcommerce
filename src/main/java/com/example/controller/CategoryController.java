@@ -51,7 +51,7 @@ public class CategoryController extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     List<Category> categories = categoryService.getAllCategories();
     List<Product> allProducts = productService.getAllProducts();
     List<Promotion> promotions = promotionService.getAllPromotions();
@@ -64,38 +64,59 @@ public class CategoryController extends HttpServlet {
       prod.setDiscountedPrice(null);
       prod.setOnPromotion(false);
 
-      double newPrice = prod.getPrice();
+      double originalPrice = prod.getPrice();
+      double bestPrice = originalPrice; // Track the best (lowest) price
       boolean hasPromotion = false;
 
       for (Promotion promo : promotions) {
-        // Vérifier si la promotion est active (inclut les dates limites)
-        if (!now.before(promo.getStartDate()) && !now.after(promo.getEndDate())) {
+        // Vérifier que les dates ne sont pas nulles avant de comparer
+        Timestamp startDate = promo.getStartDate();
+        Timestamp endDate = promo.getEndDate();
+
+        // Si les dates sont nulles, considérer la promotion comme toujours active
+        boolean isActive = true;
+        if (startDate != null && endDate != null) {
+          isActive = !now.before(startDate) && !now.after(endDate);
+        } else if (startDate != null) {
+          isActive = !now.before(startDate);
+        } else if (endDate != null) {
+          isActive = !now.after(endDate);
+        }
+
+        if (isActive) {
           boolean applies = false;
 
           // Vérifier si la promotion s'applique au produit spécifique
           if (promo.getProductId() != null && promo.getProductId().equals(prod.getId())) {
             applies = true;
           }
-          // Vérifier si la promotion s'applique à la catégorie
-          else if (promo.getCategoryId() != null &&
-            promo.getCategoryId().equals(prod.getCategoryId())) {
+          // Vérifier si la promotion s'applique à la catégorie du produit
+          else if (promo.getCategoryId() != null && prod.getCategoryId() != null &&
+              promo.getCategoryId().equals(prod.getCategoryId())) {
             applies = true;
           }
 
           if (applies) {
             double discount = promo.getValue();
-            String promoType = promo.getType().toLowerCase();
+            String promoType = promo.getType() != null ? promo.getType().toLowerCase() : "";
+
+            double calculatedPrice = originalPrice;
 
             // Support pour les types en français ET en anglais
             if (promoType.equals("percentage") || promoType.equals("pourcentage")) {
-              newPrice = newPrice * (1 - discount / 100.0);
+              calculatedPrice = originalPrice * (1 - discount / 100.0);
             } else if (promoType.equals("fixed") || promoType.equals("fixe")) {
-              newPrice = newPrice - discount;
+              calculatedPrice = originalPrice - discount;
             }
 
             // S'assurer que le prix ne soit pas négatif
-            if (newPrice < 0) {
-              newPrice = 0;
+            if (calculatedPrice < 0) {
+              calculatedPrice = 0;
+            }
+
+            // Garder le meilleur prix (le plus bas) si plusieurs promotions s'appliquent
+            if (calculatedPrice < bestPrice) {
+              bestPrice = calculatedPrice;
             }
 
             hasPromotion = true;
@@ -105,7 +126,7 @@ public class CategoryController extends HttpServlet {
 
       // Appliquer les modifications
       if (hasPromotion) {
-        prod.setDiscountedPrice(newPrice);
+        prod.setDiscountedPrice(bestPrice);
         prod.setOnPromotion(true);
       }
     }
