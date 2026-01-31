@@ -3,14 +3,19 @@ package com.example.controller;
 import com.example.config.DataSourceConfig;
 import com.example.model.Product;
 import com.example.model.Category;
+import com.example.model.Promotion;
 import com.example.repository.ProductRepository;
 import com.example.repository.CategoryRepository;
+import com.example.repository.PromotionRepository;
 import com.example.repository.impl.JdbcProductRepository;
 import com.example.repository.impl.JdbcCategoryRepository;
+import com.example.repository.impl.JdbcPromotionRepository;
 import com.example.service.ProductService;
 import com.example.service.CategoryService;
+import com.example.service.PromotionService;
 import com.example.service.impl.ProductServiceImpl;
 import com.example.service.impl.CategoryServiceImpl;
+import com.example.service.impl.PromotionServiceImpl;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,22 +23,28 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @WebServlet(name = "ProductServlet", urlPatterns = { "/products", "/admin/products" })
 public class ProductServlet extends HttpServlet {
 
     private ProductService productService;
     private CategoryService categoryService;
+    private PromotionService promotionService;
 
     @Override
     public void init() throws ServletException {
         try {
             ProductRepository prodRepo = new JdbcProductRepository(DataSourceConfig.getDataSource());
             CategoryRepository catRepo = new JdbcCategoryRepository(DataSourceConfig.getDataSource());
+            PromotionRepository promoRepo = new JdbcPromotionRepository(DataSourceConfig.getDataSource());
 
             this.productService = new ProductServiceImpl(prodRepo);
             this.categoryService = new CategoryServiceImpl(catRepo);
+            this.promotionService = new PromotionServiceImpl(promoRepo);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize dependencies", e);
         }
@@ -113,8 +124,50 @@ public class ProductServlet extends HttpServlet {
 
         List<Category> categories = categoryService.getAllCategories();
 
+        // Fetch promotions and create a map for each product
+        List<Promotion> promotions = promotionService.getAllPromotions();
+        Map<Long, Promotion> productPromotionMap = new HashMap<>();
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+
+        for (Product prod : products) {
+            for (Promotion promo : promotions) {
+                // Check if promotion is active
+                Timestamp startDate = promo.getStartDate();
+                Timestamp endDate = promo.getEndDate();
+
+                boolean isActive = true;
+                if (startDate != null && endDate != null) {
+                    isActive = !now.before(startDate) && !now.after(endDate);
+                } else if (startDate != null) {
+                    isActive = !now.before(startDate);
+                } else if (endDate != null) {
+                    isActive = !now.after(endDate);
+                }
+
+                if (isActive) {
+                    boolean applies = false;
+
+                    // Check if promotion applies to this specific product
+                    if (promo.getProductId() != null && promo.getProductId().equals(prod.getId())) {
+                        applies = true;
+                    }
+                    // Check if promotion applies to the product's category
+                    else if (promo.getCategoryId() != null && prod.getCategoryId() != null &&
+                            promo.getCategoryId().equals(prod.getCategoryId())) {
+                        applies = true;
+                    }
+
+                    if (applies) {
+                        productPromotionMap.put(prod.getId(), promo);
+                        break; // Only take the first applicable promotion
+                    }
+                }
+            }
+        }
+
         request.setAttribute("products", products);
         request.setAttribute("categories", categories);
+        request.setAttribute("productPromotionMap", productPromotionMap);
 
         // Decide view
         if (request.getRequestURI().contains("/admin")) {

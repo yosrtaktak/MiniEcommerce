@@ -27,7 +27,7 @@ public class JdbcCategoryRepository implements CategoryRepository {
         String sql = "SELECT id, name, description, created_at FROM categories ORDER BY id";
 
         try (Connection conn = dataSource.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
+                PreparedStatement ps = conn.prepareStatement(sql); //PreparedStatement Prépare la requête SQL Statement.RETURN_GENERATED_KEYS : indique qu’on veut récupérer l’ID auto-généré
                 ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
